@@ -24,7 +24,8 @@ class IngestSourceDocument
     public function __construct(private Container $container)
     {
         // Lazily resolved via registry in ReconServiceProvider.
-        $this->parsers = $container->tagged('recon.parser')->toArray() ?: [];
+        $tagged = $container->tagged('recon.parser');
+        $this->parsers = is_array($tagged) ? $tagged : iterator_to_array($tagged, false);
     }
 
     public function handle(SourceDocument $doc): SourceDocument
