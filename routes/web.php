@@ -2,6 +2,5 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// To jest mikroserwis - jedyny interfejs dla ludzi to panel operatorski.
+Route::redirect('/', '/admin');

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Support\Money;
+use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/** Zestawienie naszej księgi z danymi konsumenta za okres. */
 class Reconciliation extends Model
 {
     public const STATUS_OPEN = 'open';
@@ -15,39 +17,44 @@ class Reconciliation extends Model
     public const STATUS_CLOSED = 'closed';
 
     protected $fillable = [
-        'group_no', 'provider_id', 'period_from', 'period_to',
-        'expected_total', 'actual_total', 'difference', 'currency',
+        'group_no', 'tenant_id', 'bank_account_id', 'masscollect_domain_id',
+        'period_from', 'period_to', 'currency',
+        'bank_total_minor', 'counterparty_total_minor', 'difference_minor',
+        'matched_count', 'unmatched_count',
         'status', 'created_by', 'closed_by', 'closed_at',
     ];
 
     protected $casts = [
-        'period_from' => 'date',
-        'period_to' => 'date',
-        'expected_total' => 'decimal:2',
-        'actual_total' => 'decimal:2',
-        'difference' => 'decimal:2',
-        'closed_at' => 'datetime',
+        'period_from'              => 'date',
+        'period_to'                => 'date',
+        'bank_total_minor'         => 'int',
+        'counterparty_total_minor' => 'int',
+        'difference_minor'         => 'int',
+        'closed_at'                => 'datetime',
     ];
 
-    public function provider(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Provider::class);
+        return $this->belongsTo(Tenant::class);
     }
 
-    public function items(): HasMany
+    public function bankAccount(): BelongsTo
     {
-        return $this->hasMany(ReconciliationItem::class);
+        return $this->belongsTo(BankAccount::class);
     }
 
-    public function sourceRows(): BelongsToMany
+    public function domain(): BelongsTo
     {
-        return $this->belongsToMany(SourceRow::class, 'reconciliation_items')
-            ->withPivot('role')
-            ->withTimestamps();
+        return $this->belongsTo(MasscollectDomain::class, 'masscollect_domain_id');
     }
 
     public function discrepancies(): HasMany
     {
         return $this->hasMany(Discrepancy::class);
+    }
+
+    public function difference(): BigDecimal
+    {
+        return Money::fromMinorUnits($this->difference_minor);
     }
 }

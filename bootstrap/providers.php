@@ -2,6 +2,6 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    App\Providers\ReconServiceProvider::class,
+    App\Providers\BankingServiceProvider::class,
     App\Providers\Filament\AdminPanelProvider::class,
 ];

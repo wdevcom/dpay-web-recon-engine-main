@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+/*
+| Bank nie ma webhooków - wszystko idzie odpytywaniem. Pobranie jest tanie
+| i deduplikowane, więc lepiej pytać za często niż za rzadko.
+*/
+Schedule::command('bnp:pull-history')->everyFiveMinutes()->withoutOverlapping();
+Schedule::command('masscollect:match')->everyFiveMinutes()->withoutOverlapping();
+Schedule::command('bnp:sync-accounts')->hourly()->withoutOverlapping();
+Schedule::command('masscollect:expire')->everyThirtyMinutes();

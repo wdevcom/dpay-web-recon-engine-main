@@ -13,14 +13,9 @@ class Approval extends Model
     public const ACTION_REJECTED = 'rejected';
     public const ACTION_REVERTED = 'reverted';
 
-    protected $fillable = [
-        'approvable_type', 'approvable_id', 'action',
-        'actor_id', 'comment', 'acted_at',
-    ];
+    protected $fillable = ['approvable_type', 'approvable_id', 'action', 'actor_id', 'comment', 'acted_at'];
 
-    protected $casts = [
-        'acted_at' => 'datetime',
-    ];
+    protected $casts = ['acted_at' => 'datetime'];
 
     public function approvable(): MorphTo
     {

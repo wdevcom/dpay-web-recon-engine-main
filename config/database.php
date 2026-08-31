@@ -114,25 +114,6 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
-        // Read-only connection to the main payment-gateway database (`main_db`).
-        // The recon engine pulls internal transactions and customer payouts from here.
-        // Writes are blocked at the application layer (App\Recon\External\Main\ReadOnlyConnection).
-        'main_db' => [
-            'driver' => env('MAIN_DB_DRIVER', 'mysql'),
-            'host' => env('MAIN_DB_HOST', '127.0.0.1'),
-            'port' => env('MAIN_DB_PORT', '3306'),
-            'database' => env('MAIN_DB_DATABASE', 'dpay_main'),
-            'username' => env('MAIN_DB_USERNAME', 'recon_reader'),
-            'password' => env('MAIN_DB_PASSWORD', ''),
-            'charset' => env('MAIN_DB_CHARSET', 'utf8mb4'),
-            'collation' => env('MAIN_DB_COLLATION', 'utf8mb4_unicode_ci'),
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
-            'sticky' => false,
-        ],
-
     ],
 
     /*

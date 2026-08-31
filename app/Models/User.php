@@ -5,10 +5,12 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -22,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_operator',
     ];
 
     /**
@@ -39,11 +42,21 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    /**
+     * Panel widzi pełną księgę i pozwala zatwierdzać rozjazdy, więc dostęp
+     * jest jawnie nadawany, a nie domyślny dla każdego konta.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->is_operator;
+    }
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_operator' => 'bool',
         ];
     }
 }

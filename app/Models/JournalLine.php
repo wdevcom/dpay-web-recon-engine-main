@@ -13,7 +13,7 @@ class JournalLine extends Model
     ];
 
     protected $casts = [
-        'debit' => 'decimal:2',
+        'debit'  => 'decimal:2',
         'credit' => 'decimal:2',
     ];
 

@@ -10,16 +10,14 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         User::factory()->create([
             'name'  => 'Operator',
             'email' => 'operator@dpay.pl',
+            'is_operator' => true,
         ]);
 
-        $this->call(ReconCoreSeeder::class);
+        $this->call(BankingSeeder::class);
     }
 }
